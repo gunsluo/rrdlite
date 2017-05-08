@@ -104,8 +104,8 @@ func (c *Creator) Create(overwrite bool) error {
 type Updater struct {
 	filename cstring
 	template cstring
-
-	args []string
+	stUpTm   int64
+	args     []string
 }
 
 func NewUpdater(filename string) *Updater {
@@ -114,6 +114,10 @@ func NewUpdater(filename string) *Updater {
 
 func (u *Updater) SetTemplate(dsName ...string) {
 	u.template = newCstring(strings.Join(dsName, ":"))
+}
+
+func (u *Updater) SetStartUpdateTm(stUpTm int64) {
+	u.stUpTm = stUpTm
 }
 
 // Cache chaches data for later save using Update(). Use it to avoid

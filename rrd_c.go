@@ -86,6 +86,7 @@ func (u *Updater) update(_args []string) error {
 		(*C.char)(u.template.p()),
 		C.int(len(args)),
 		&args[0],
+		C.ulong(u.stUpTm),
 	)
 	return makeError(e)
 }

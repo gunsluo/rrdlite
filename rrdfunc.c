@@ -10,9 +10,9 @@ const char *rrdCreate(const char *filename, unsigned long step,
 }
 
 const char *rrdUpdate(const char *filename, const char *template, 
-		int argc, const char **argv) {
+		int argc, const char **argv, unsigned long start_tm) {
 	int ret;
-	ret = rrd_update_r(filename, template, argc, argv);
+	ret = rrd_update_r(filename, template, argc, argv, start_tm);
 	return rrd_strerror(ret);
 }
 

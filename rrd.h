@@ -176,7 +176,7 @@ extern    "C" {
 	   specifications get used!!! */
 
 	int       rrd_update_r( const char *filename, const char *_template,
-			int argc, const char **argv);
+			int argc, const char **argv, unsigned long start_tm);
 	int rrd_fetch_r ( const char *filename, const char *cf, time_t *start, time_t *end,
 			unsigned long *step, unsigned long *ds_cnt, char ***ds_namv, rrd_value_t **data);
 	int       rrd_dump_r( const char *filename, char *outname);

@@ -65,9 +65,9 @@ static int gettimeofday( struct timeval *t, struct __timezone *tz) {
 /* FUNCTION PROTOTYPES */
 
 int       rrd_update_r( const char *filename, const char *tmplt,
-		int argc, const char **argv);
+		int argc, const char **argv, unsigned long start_tm);
 int       _rrd_update( const char *filename, const char *tmplt,
-		int argc, const char **argv, rrd_info_t *);
+		int argc, const char **argv, unsigned long start_tm, rrd_info_t *);
 
 static int allocate_data_structures( rrd_t *rrd, char ***updvals,
 		rrd_value_t **pdp_temp, const char *tmplt, long **tmpl_idx,
@@ -219,12 +219,12 @@ static void initialize_time( time_t *current_time, unsigned long *current_time_u
 #define IFDNAN(X,Y) (isnan(X) ? (Y) : (X));
 
 int rrd_update_r( const char *filename, const char *tmplt, int argc,
-		const char **argv) {
-	return _rrd_update(filename, tmplt, argc, argv, NULL);
+		const char **argv, unsigned long start_tm) {
+	return _rrd_update(filename, tmplt, argc, argv, start_tm, NULL);
 }
 
 int _rrd_update( const char *filename, const char *tmplt,
-		int argc, const char **argv, rrd_info_t * pcdp_summary) {
+		int argc, const char **argv, unsigned long start_tm, rrd_info_t * pcdp_summary) {
 
 	int       arg_i = 2;
 
@@ -287,6 +287,11 @@ int _rrd_update( const char *filename, const char *tmplt,
 	}
 
 	/* loop through the arguments. */
+	unsigned long    tmp;
+    if (start_tm != 0) {
+        tmp = rrd.live_head->last_up;
+        rrd.live_head->last_up = start_tm;
+    }
 	for (arg_i = 0; arg_i < argc; arg_i++) {
 		if ((arg_copy = strdup(argv[arg_i])) == NULL) {
 			ret = -RRD_ERR_FAILED_STRDUP;
@@ -308,6 +313,9 @@ int _rrd_update( const char *filename, const char *tmplt,
 		}
 		free(arg_copy);
 	}
+    if (start_tm != 0) {
+        rrd.live_head->last_up = tmp;
+    }
 
 	free(rra_step_cnt);
 
