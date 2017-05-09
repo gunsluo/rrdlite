@@ -32,3 +32,12 @@ func Info(filename string) (map[string]interface{}, error) {
 func Fetch(filename, cf string, start, end time.Time, step time.Duration) (FetchResult, error) {
 	return FetchResult{}, nil
 }
+
+// FreeValues free values memory allocated by C.
+func (r *FetchResult) FreeValues() {
+}
+
+// Values returns copy of internal array of values.
+func (r *FetchResult) Values() []float64 {
+	return append([]float64{}, r.values...)
+}
